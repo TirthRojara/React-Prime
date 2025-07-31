@@ -6,39 +6,41 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 import { Column } from 'primereact/column';
 import OverlayComponent from './OverlayComponent';
 import { useFetchArtworksWithPagination } from '../api/query';
-import { useArtworkSelectionState } from '../hooks/useSelectedArtwords';
 
 interface TableProps {
     artworks: ArtworkType[];
     pagination: PagginationType;
+    selectedArtworks: ArtworkType[];
+    setSelectedArtworks: React.Dispatch<React.SetStateAction<ArtworkType[]>>;
+    mergeUnique: (prev: ArtworkType[], next: ArtworkType[]) => ArtworkType[];
+    handleSelectionChange: (newSelection: ArtworkType[], currentPageArtworks: ArtworkType[]) => void;
 }
 
 const NUMBER_OF_ROWS_PER_PAGE = 12;
 
-const Table: React.FC<TableProps> = ({ artworks, pagination }) => {
+const Table: React.FC<TableProps> = ({ artworks, pagination, mergeUnique, handleSelectionChange, selectedArtworks, setSelectedArtworks }) => {
     const { page, setPage } = useGetPageParams();
     const overlayRef = useRef<OverlayPanel>(null);
     
     const { fetchExtraRows } = useFetchArtworksWithPagination();
-    const { selectedArtworks, setSelectedArtworks, handleSelectionChange, mergeUnique } =
-        useArtworkSelectionState(artworks);
-
+        
     const firstRowIndex = (page - 1) * NUMBER_OF_ROWS_PER_PAGE;
-
+        
     const handleSubmit = async (rowNumber: number) => {
         const currentPageRows = artworks.slice(0, Math.min(rowNumber, NUMBER_OF_ROWS_PER_PAGE));
-
+        
         if (rowNumber <= NUMBER_OF_ROWS_PER_PAGE) {
             setSelectedArtworks((prev) => mergeUnique(prev, currentPageRows));
             return;
         }
-
+        
         const extraNeeded = rowNumber - NUMBER_OF_ROWS_PER_PAGE;
         const extraRows = await fetchExtraRows(page, extraNeeded, NUMBER_OF_ROWS_PER_PAGE, pagination.total_pages);
-
+        
         setSelectedArtworks((prev) => mergeUnique(prev, [...currentPageRows, ...extraRows]));
     };
-
+        
+    console.log("Selected Artworks:", selectedArtworks);
 
     return (
         <>
@@ -59,13 +61,13 @@ const Table: React.FC<TableProps> = ({ artworks, pagination }) => {
                         setPage(e.page + 1);
                     }
                 }}
-                selectionMode='multiple'
+                selectionMode='checkbox'
                 selection={selectedArtworks}
-                onSelectionChange={(e) => handleSelectionChange(e.value)}
+                onSelectionChange={(e) => handleSelectionChange(e.value, artworks)}
                 dataKey="id"
                 tableStyle={{ minWidth: '50rem' }}
-                scrollable 
-                scrollHeight="755px"
+                // scrollable 
+                // scrollHeight="755px"
             >
                <Column 
                     selectionMode="multiple" 

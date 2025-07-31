@@ -36,7 +36,7 @@ const artworkQueryOptions = (params: FetchArtworksParams) => ({
     enabled: !!params.page,
     retry: false,
     placeholderData: keepPreviousData,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 10,
 })
 
 
