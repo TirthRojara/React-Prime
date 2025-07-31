@@ -1,11 +1,9 @@
-
-import React from 'react';
 import { Skeleton } from 'primereact/skeleton';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
 export default function DataTableDemo() {
-    const items: number[] = Array.from({ length: 15 }, (v, i) => i);
+    const items = Array.from({ length: 15 }, (_, i) => ({ id: i }));
 
     return (
         <div className="card">

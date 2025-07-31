@@ -7,7 +7,6 @@ import { Column } from 'primereact/column';
 import OverlayComponent from './OverlayComponent';
 import { useFetchArtworksWithPagination } from '../api/query';
 import { useArtworkSelectionState } from '../hooks/useSelectedArtwords';
-import Loading from './Loading';
 
 interface TableProps {
     artworks: ArtworkType[];
@@ -20,7 +19,7 @@ const Table: React.FC<TableProps> = ({ artworks, pagination }) => {
     const { page, setPage } = useGetPageParams();
     const overlayRef = useRef<OverlayPanel>(null);
     
-    const { fetchExtraRows, isLoading } = useFetchArtworksWithPagination();
+    const { fetchExtraRows } = useFetchArtworksWithPagination();
     const { selectedArtworks, setSelectedArtworks, handleSelectionChange, mergeUnique } =
         useArtworkSelectionState(artworks);
 
@@ -40,10 +39,6 @@ const Table: React.FC<TableProps> = ({ artworks, pagination }) => {
         setSelectedArtworks((prev) => mergeUnique(prev, [...currentPageRows, ...extraRows]));
     };
 
-    // if (isLoading) {
-    //     console.log("table loading");
-    //     return <Loading />;
-    // }
 
     return (
         <>
