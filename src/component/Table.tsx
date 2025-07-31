@@ -61,13 +61,13 @@ const Table: React.FC<TableProps> = ({ artworks, pagination, mergeUnique, handle
                         setPage(e.page + 1);
                     }
                 }}
-                selectionMode='checkbox'
+                selectionMode="multiple"
                 selection={selectedArtworks}
                 onSelectionChange={(e) => handleSelectionChange(e.value, artworks)}
                 dataKey="id"
                 tableStyle={{ minWidth: '50rem' }}
-                // scrollable 
-                // scrollHeight="755px"
+                scrollable
+                scrollHeight="755px"
             >
                <Column 
                     selectionMode="multiple" 
